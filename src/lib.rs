@@ -1,1 +1,5 @@
-pub mod quadtree;
+mod quadtree;
+pub use quadtree::*;
+
+#[cfg(test)]
+mod tests;
