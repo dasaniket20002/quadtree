@@ -1,0 +1,7 @@
+[package]
+name = "quadtree"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+double-linked-list = { git = "https://github.com/dasaniket20002/double-linked-list.git", branch = "main" }
