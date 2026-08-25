@@ -40,7 +40,7 @@ mod tests {
 
     #[test]
     fn insert_adds_element() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         let location = tree.insert(42, box_at(10.0, 10.0, 2.0));
 
@@ -54,7 +54,7 @@ mod tests {
 
     #[test]
     fn inserted_element_can_be_found() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         tree.insert(42, box_at(10.0, 10.0, 2.0));
 
@@ -66,7 +66,7 @@ mod tests {
 
     #[test]
     fn search_does_not_return_non_overlapping_elements() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         tree.insert(1, box_at(-30.0, -30.0, 2.0));
 
@@ -79,7 +79,7 @@ mod tests {
 
     #[test]
     fn search_returns_multiple_overlapping_elements() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         tree.insert(1, box_at(0.0, 0.0, 10.0));
 
@@ -97,7 +97,7 @@ mod tests {
 
     #[test]
     fn search_returns_element_that_touches_boundary() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         tree.insert(42, box_at(10.0, 0.0, 10.0));
 
@@ -117,7 +117,7 @@ mod tests {
 
     #[test]
     fn search_outside_world_returns_empty_result() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         tree.insert(42, box_at(0.0, 0.0, 2.0));
 
@@ -128,7 +128,7 @@ mod tests {
 
     #[test]
     fn element_outside_all_quadrants_stays_at_current_node() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         let location = tree.insert(42, box_at(0.0, 0.0, 60.0));
 
@@ -139,7 +139,7 @@ mod tests {
 
     #[test]
     fn small_element_is_inserted_into_descendant() {
-        let mut tree = Quadtree::new_with_depth(world(), 4);
+        let tree = Quadtree::new_with_depth(world(), 4);
 
         let location = tree.insert(42, box_at(-40.0, -40.0, 2.0));
 
@@ -157,7 +157,7 @@ mod tests {
 
     #[test]
     fn quadtree_creates_children_when_subdividing() {
-        let mut tree = Quadtree::new_with_depth(world(), 4);
+        let tree = Quadtree::new_with_depth(world(), 4);
 
         tree.insert(42, box_at(-40.0, -40.0, 2.0));
 
@@ -166,7 +166,7 @@ mod tests {
 
     #[test]
     fn max_depth_limits_subdivision() {
-        let mut tree = Quadtree::new_with_depth(world(), 1);
+        let tree = Quadtree::new_with_depth(world(), 1);
 
         let location = tree.insert(42, box_at(-40.0, -40.0, 0.01));
 
@@ -177,7 +177,7 @@ mod tests {
 
     #[test]
     fn remove_removes_element_from_search_results() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         let location = tree.insert(42, box_at(10.0, 10.0, 2.0));
 
@@ -190,7 +190,7 @@ mod tests {
 
     #[test]
     fn remove_returns_removed_node() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         let location = tree.insert(42, box_at(10.0, 10.0, 2.0));
 
@@ -203,7 +203,7 @@ mod tests {
 
     #[test]
     fn relocate_updates_element_bounds() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         let mut location = tree.insert(42, box_at(10.0, 10.0, 2.0));
 
@@ -216,7 +216,7 @@ mod tests {
 
     #[test]
     fn relocate_moves_element_to_new_quadtree_node() {
-        let mut tree = Quadtree::new_with_depth(world(), 4);
+        let tree = Quadtree::new_with_depth(world(), 4);
 
         let mut location = tree.insert(42, box_at(-40.0, -40.0, 2.0));
 
@@ -246,7 +246,7 @@ mod tests {
 
     #[test]
     fn relocate_keeps_same_node_when_possible() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         let mut location = tree.insert(42, box_at(10.0, 10.0, 2.0));
 
@@ -259,7 +259,7 @@ mod tests {
 
     #[test]
     fn relocate_can_move_element_out_of_current_subtree() {
-        let mut tree = Quadtree::new_with_depth(world(), 4);
+        let tree = Quadtree::new_with_depth(world(), 4);
 
         let mut location = tree.insert(42, box_at(-40.0, -40.0, 2.0));
 
@@ -280,7 +280,7 @@ mod tests {
 
     #[test]
     fn relocate_keeps_same_linked_list_node() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         let mut location = tree.insert(42, box_at(-30.0, -30.0, 2.0));
 
@@ -295,7 +295,7 @@ mod tests {
 
     #[test]
     fn search_finds_elements_stored_at_parent_nodes() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         let location = tree.insert(42, box_at(0.0, 0.0, 60.0));
 
@@ -308,7 +308,7 @@ mod tests {
 
     #[test]
     fn search_finds_elements_in_children() {
-        let mut tree = Quadtree::new_with_depth(world(), 4);
+        let tree = Quadtree::new_with_depth(world(), 4);
 
         tree.insert(1, box_at(-40.0, -40.0, 2.0));
 
@@ -321,7 +321,7 @@ mod tests {
 
     #[test]
     fn search_collects_all_when_query_contains_node() {
-        let mut tree = Quadtree::new_with_depth(world(), 4);
+        let tree = Quadtree::new_with_depth(world(), 4);
 
         tree.insert(1, box_at(-40.0, -40.0, 2.0));
 
@@ -337,7 +337,7 @@ mod tests {
 
     #[test]
     fn multiple_insertions_and_removals_work() {
-        let mut tree = Quadtree::new(world());
+        let tree = Quadtree::new(world());
 
         let first = tree.insert(1, box_at(-10.0, -10.0, 2.0));
 
@@ -374,7 +374,7 @@ mod tests {
 
     #[test]
     fn elements_on_quadrant_boundaries_are_handled_correctly() {
-        let mut tree = Quadtree::new_with_depth(world(), 4);
+        let tree = Quadtree::new_with_depth(world(), 4);
 
         let location = tree.insert(42, box_at(0.0, 0.0, 2.0));
 

@@ -334,7 +334,7 @@ impl<T> Quadtree<T> {
     /// );
     /// ```
 
-    pub fn insert(&mut self, element: T, bounds: AABB) -> QuadtreeElementLocation<T> {
+    pub fn insert(&self, element: T, bounds: AABB) -> QuadtreeElementLocation<T> {
         let qt_node = Self::find_node_for(self.root.clone(), &bounds, self.max_depth);
         let ll_node = qt_node
             .write()
@@ -388,7 +388,7 @@ impl<T> Quadtree<T> {
     /// ```
 
     pub fn remove(
-        &mut self,
+        &self,
         element: QuadtreeElementLocation<T>,
     ) -> DoubleLinkedListNodeRef<Element<T>> {
         element
@@ -446,7 +446,7 @@ impl<T> Quadtree<T> {
     /// assert_eq!(results[0].read().unwrap().value().0, 42);
     /// ```
 
-    pub fn relocate(&mut self, element: &mut QuadtreeElementLocation<T>, new_bounds: AABB) {
+    pub fn relocate(&self, element: &mut QuadtreeElementLocation<T>, new_bounds: AABB) {
         element.ll_node.write().unwrap().value_mut().1 = new_bounds;
 
         // If the new bounds still fit inside the current node's region, the
