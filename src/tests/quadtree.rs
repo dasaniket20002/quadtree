@@ -26,9 +26,9 @@ mod tests {
         let tree: Quadtree<i32> = Quadtree::new(world());
 
         assert_eq!(tree.max_depth, 16);
-        assert_eq!(tree.root.read().unwrap().self_depth, 0);
-        assert!(tree.root.read().unwrap().elements.is_empty());
-        assert!(tree.root.read().unwrap().children.is_none());
+        assert_eq!(tree.root.read().self_depth, 0);
+        assert!(tree.root.read().elements.is_empty());
+        assert!(tree.root.read().children.is_none());
     }
 
     #[test]
@@ -132,9 +132,9 @@ mod tests {
 
         let location = tree.insert(42, box_at(0.0, 0.0, 60.0));
 
-        assert_eq!(location.qt_node.read().unwrap().self_depth, 0);
+        assert_eq!(location.qt_node.read().self_depth, 0);
 
-        assert_eq!(location.qt_node.read().unwrap().bounds, world());
+        assert_eq!(location.qt_node.read().bounds, world());
     }
 
     #[test]
@@ -143,13 +143,12 @@ mod tests {
 
         let location = tree.insert(42, box_at(-40.0, -40.0, 2.0));
 
-        assert!(location.qt_node.read().unwrap().self_depth > 0);
+        assert!(location.qt_node.read().self_depth > 0);
 
         assert!(
             location
                 .qt_node
                 .read()
-                .unwrap()
                 .bounds
                 .contains(&box_at(-40.0, -40.0, 2.0))
         );
@@ -161,7 +160,7 @@ mod tests {
 
         tree.insert(42, box_at(-40.0, -40.0, 2.0));
 
-        assert!(tree.root.read().unwrap().children.is_some());
+        assert!(tree.root.read().children.is_some());
     }
 
     #[test]
@@ -170,9 +169,9 @@ mod tests {
 
         let location = tree.insert(42, box_at(-40.0, -40.0, 0.01));
 
-        assert_eq!(location.qt_node.read().unwrap().self_depth, 1);
+        assert_eq!(location.qt_node.read().self_depth, 1);
 
-        assert!(location.qt_node.read().unwrap().children.is_none());
+        assert!(location.qt_node.read().children.is_none());
     }
 
     #[test]
@@ -229,7 +228,6 @@ mod tests {
         assert!(
             !old_node
                 .read()
-                .unwrap()
                 .elements
                 .contains(&location.ll_node)
         );
@@ -238,7 +236,6 @@ mod tests {
             location
                 .qt_node
                 .read()
-                .unwrap()
                 .elements
                 .contains(&location.ll_node)
         );
@@ -252,7 +249,7 @@ mod tests {
 
         tree.relocate(&mut location, box_at(11.0, 11.0, 2.0));
 
-        let node = location.qt_node.read().unwrap();
+        let node = location.qt_node.read();
 
         assert!(node.bounds.contains(&box_at(11.0, 11.0, 2.0)));
     }
@@ -299,7 +296,7 @@ mod tests {
 
         let location = tree.insert(42, box_at(0.0, 0.0, 60.0));
 
-        assert_eq!(location.qt_node.read().unwrap().self_depth, 0);
+        assert_eq!(location.qt_node.read().self_depth, 0);
 
         let results = tree.search(box_at(0.0, 0.0, 10.0));
 
@@ -382,7 +379,6 @@ mod tests {
             location
                 .qt_node
                 .read()
-                .unwrap()
                 .bounds
                 .contains(&box_at(0.0, 0.0, 2.0))
         );

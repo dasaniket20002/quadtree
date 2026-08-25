@@ -1,6 +1,7 @@
 use crate::quadtree::aabb::AABB;
 use double_linked_list::{DoubleLinkedList, DoubleLinkedListNodeRef};
-use std::sync::{Arc, RwLock};
+use parking_lot::RwLock;
+use std::sync::{Arc};
 
 /// Maximum depth used by [`Quadtree::new`].
 ///
@@ -79,7 +80,7 @@ pub struct QuadtreeElementLocation<T> {
 ///     0,
 /// );
 ///
-/// assert_eq!(node.read().unwrap().self_depth, 0);
+/// assert_eq!(node.read().self_depth, 0);
 /// ```
 pub type QuadtreeNodeRef<T> = Arc<RwLock<QuadtreeNode<T>>>;
 
@@ -194,7 +195,7 @@ impl<T> QuadtreeNode<T> {
     ///     0,
     /// );
     ///
-    /// assert_eq!(node.read().unwrap().self_depth, 0);
+    /// assert_eq!(node.read().self_depth, 0);
     /// ```
 
     pub fn new_ref(bounds: AABB, depth: u8) -> QuadtreeNodeRef<T> {
@@ -257,7 +258,7 @@ impl<T> Quadtree<T> {
     /// let tree: Quadtree<i32> = Quadtree::new(bounds);
     ///
     /// assert_eq!(tree.max_depth, 16);
-    /// assert_eq!(tree.root.read().unwrap().self_depth, 0);
+    /// assert_eq!(tree.root.read().self_depth, 0);
     /// ```
 
     pub fn new(world_bounds: AABB) -> Self {
@@ -338,7 +339,6 @@ impl<T> Quadtree<T> {
         let qt_node = Self::find_node_for(self.root.clone(), &bounds, self.max_depth);
         let ll_node = qt_node
             .write()
-            .unwrap()
             .elements
             .push_back((element, bounds));
 
@@ -394,7 +394,6 @@ impl<T> Quadtree<T> {
         element
             .qt_node
             .write()
-            .unwrap()
             .elements
             .remove_node(element.ll_node.clone());
 
@@ -453,7 +452,7 @@ impl<T> Quadtree<T> {
         // correct node (if different at all) must be a descendant of the
         // current node, so we can resume the search from there instead of
         // the root. Otherwise we have to restart from the root.
-        let still_fits_current = element.qt_node.read().unwrap().bounds.contains(&new_bounds);
+        let still_fits_current = element.qt_node.read().bounds.contains(&new_bounds);
 
         let start = if still_fits_current {
             element.qt_node.clone()
@@ -470,13 +469,11 @@ impl<T> Quadtree<T> {
         element
             .qt_node
             .write()
-            .unwrap()
             .elements
             .remove_node(element.ll_node.clone());
 
         best_node
             .write()
-            .unwrap()
             .elements
             .insert_node(element.ll_node.clone());
 
@@ -563,7 +560,7 @@ impl<T> Quadtree<T> {
     ) -> QuadtreeNodeRef<T> {
         loop {
             let (depth, quadrants) = {
-                let node_ref = node.read().unwrap();
+                let node_ref = node.read();
                 (node_ref.self_depth, node_ref.bounds.split_into_quadrants())
             };
 
@@ -576,7 +573,7 @@ impl<T> Quadtree<T> {
             };
 
             let child = {
-                let mut node_mut = node.write().unwrap();
+                let mut node_mut = node.write();
                 let children = node_mut
                     .children
                     .get_or_insert_with(|| quadrants.map(|q| QuadtreeNode::new_ref(q, depth + 1)));
@@ -611,7 +608,7 @@ impl<T> Quadtree<T> {
         result: &mut Vec<DoubleLinkedListNodeRef<Element<T>>>,
     ) {
         let (node_bounds, fully_contains) = {
-            let node_ref = node.read().unwrap();
+            let node_ref = node.read();
             (node_ref.bounds, bounds.contains(&node_ref.bounds))
         };
 
@@ -624,7 +621,7 @@ impl<T> Quadtree<T> {
             return;
         }
 
-        let node_ref = node.read().unwrap();
+        let node_ref = node.read();
 
         for elem in node_ref.elements.iter_nodes() {
             let elem_bounds = elem.read().unwrap().value().1;
@@ -657,7 +654,7 @@ impl<T> Quadtree<T> {
         node: &QuadtreeNodeRef<T>,
         result: &mut Vec<DoubleLinkedListNodeRef<Element<T>>>,
     ) {
-        let node_ref = node.read().unwrap();
+        let node_ref = node.read();
 
         for elem in node_ref.elements.iter_nodes() {
             result.push(elem);

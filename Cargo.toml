@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 double-linked-list = { git = "https://github.com/dasaniket20002/double-linked-list.git", branch = "main" }
+parking_lot = "0.12.5"
