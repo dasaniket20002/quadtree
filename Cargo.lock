@@ -17,7 +17,10 @@ checksum = "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
 [[package]]
 name = "double-linked-list"
 version = "0.1.0"
-source = "git+https://github.com/dasaniket20002/double-linked-list.git?branch=main#e35dcefdaa6c0ea11483479d786eee8f32a4b4c3"
+source = "git+https://github.com/dasaniket20002/double-linked-list.git#e241ec5aebc9777ae0aac3b2a5df8cb1a3934594"
+dependencies = [
+ "parking_lot",
+]
 
 [[package]]
 name = "libc"

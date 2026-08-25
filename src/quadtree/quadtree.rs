@@ -1,7 +1,7 @@
 use crate::quadtree::aabb::AABB;
 use double_linked_list::{DoubleLinkedList, DoubleLinkedListNodeRef};
 use parking_lot::RwLock;
-use std::sync::{Arc};
+use std::sync::Arc;
 
 /// Maximum depth used by [`Quadtree::new`].
 ///
@@ -53,7 +53,7 @@ pub type Element<T> = (T, AABB);
 /// );
 ///
 /// assert_eq!(
-///     location.ll_node.read().unwrap().value().0,
+///     location.ll_node.read().value().0,
 ///     42
 /// );
 /// ```
@@ -330,17 +330,14 @@ impl<T> Quadtree<T> {
     /// );
     ///
     /// assert_eq!(
-    ///     location.ll_node.read().unwrap().value().0,
+    ///     location.ll_node.read().value().0,
     ///     "player"
     /// );
     /// ```
 
     pub fn insert(&self, element: T, bounds: AABB) -> QuadtreeElementLocation<T> {
         let qt_node = Self::find_node_for(self.root.clone(), &bounds, self.max_depth);
-        let ll_node = qt_node
-            .write()
-            .elements
-            .push_back((element, bounds));
+        let ll_node = qt_node.write().elements.push_back((element, bounds));
 
         QuadtreeElementLocation { ll_node, qt_node }
     }
@@ -378,7 +375,7 @@ impl<T> Quadtree<T> {
     /// let node = tree.remove(location);
     ///
     /// assert_eq!(
-    ///     node.read().unwrap().value().0,
+    ///     node.read().value().0,
     ///     42
     /// );
     ///
@@ -442,11 +439,11 @@ impl<T> Quadtree<T> {
     /// );
     ///
     /// assert_eq!(results.len(), 1);
-    /// assert_eq!(results[0].read().unwrap().value().0, 42);
+    /// assert_eq!(results[0].read().value().0, 42);
     /// ```
 
     pub fn relocate(&self, element: &mut QuadtreeElementLocation<T>, new_bounds: AABB) {
-        element.ll_node.write().unwrap().value_mut().1 = new_bounds;
+        element.ll_node.write().value_mut().1 = new_bounds;
 
         // If the new bounds still fit inside the current node's region, the
         // correct node (if different at all) must be a descendant of the
@@ -523,7 +520,7 @@ impl<T> Quadtree<T> {
     /// );
     ///
     /// assert_eq!(results.len(), 1);
-    /// assert_eq!(results[0].read().unwrap().value().0, "inside");
+    /// assert_eq!(results[0].read().value().0, "inside");
     /// ```
 
     pub fn search(&self, bounds: AABB) -> Vec<DoubleLinkedListNodeRef<Element<T>>> {
@@ -624,7 +621,7 @@ impl<T> Quadtree<T> {
         let node_ref = node.read();
 
         for elem in node_ref.elements.iter_nodes() {
-            let elem_bounds = elem.read().unwrap().value().1;
+            let elem_bounds = elem.read().value().1;
             if bounds.overlaps(&elem_bounds) {
                 result.push(elem.clone());
             }

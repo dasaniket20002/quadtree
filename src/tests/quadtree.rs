@@ -17,7 +17,7 @@ mod tests {
     fn result_values<T: Clone>(results: &[DoubleLinkedListNodeRef<Element<T>>]) -> Vec<T> {
         results
             .iter()
-            .map(|node| node.read().unwrap().value().0.clone())
+            .map(|node| node.read().value().0.clone())
             .collect()
     }
 
@@ -44,10 +44,10 @@ mod tests {
 
         let location = tree.insert(42, box_at(10.0, 10.0, 2.0));
 
-        assert_eq!(location.ll_node.read().unwrap().value().0, 42);
+        assert_eq!(location.ll_node.read().value().0, 42);
 
         assert_eq!(
-            location.ll_node.read().unwrap().value().1,
+            location.ll_node.read().value().1,
             box_at(10.0, 10.0, 2.0)
         );
     }
@@ -61,7 +61,7 @@ mod tests {
         let results = tree.search(box_at(10.0, 10.0, 5.0));
 
         assert_eq!(results.len(), 1);
-        assert_eq!(results[0].read().unwrap().value().0, 42);
+        assert_eq!(results[0].read().value().0, 42);
     }
 
     #[test]
@@ -195,9 +195,9 @@ mod tests {
 
         let node = tree.remove(location);
 
-        assert_eq!(node.read().unwrap().value().0, 42);
+        assert_eq!(node.read().value().0, 42);
 
-        assert_eq!(node.read().unwrap().value().1, box_at(10.0, 10.0, 2.0));
+        assert_eq!(node.read().value().1, box_at(10.0, 10.0, 2.0));
     }
 
     #[test]
@@ -210,7 +210,7 @@ mod tests {
 
         tree.relocate(&mut location, new_bounds);
 
-        assert_eq!(location.ll_node.read().unwrap().value().1, new_bounds);
+        assert_eq!(location.ll_node.read().value().1, new_bounds);
     }
 
     #[test]
@@ -287,7 +287,7 @@ mod tests {
 
         assert!(Arc::ptr_eq(&original_ll_node, &location.ll_node));
 
-        assert_eq!(location.ll_node.read().unwrap().value().0, 42);
+        assert_eq!(location.ll_node.read().value().0, 42);
     }
 
     #[test]
